@@ -76,16 +76,30 @@ public class Login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loginFlag = false;
-				CMSessionEvent loginAckEvent = null;
+				//CMSessionEvent loginAckEvent = null;
 				String userID = id.getText();
             	String userPassword = "";           	
             	char[] secret_pw = pwd.getPassword();
             	String errorMessage = "";
             	
+            	
             	for(char cha : secret_pw) {
             		Character.toString(cha);
             		userPassword += (userPassword.equals("")) ? cha + "" : "" + cha + "";
             	}
+            	
+            	boolean bRequestResult = AuctionClient.m_clientStub.loginCM(userID, userPassword);
+    			if(bRequestResult)
+    			{
+    				System.out.println("successfully sent the login request.\n");
+    				
+    			}
+    			else
+    			{
+    				System.out.println("failed the login request!\n");
+    			}
+            	
+    			
 				
             	if(userID.length() == 0) {
             		errorMessage = "ID field cannot be blank!";
@@ -98,23 +112,24 @@ public class Login extends JFrame {
             	}
             	
             	else if(userID.length() != 0 && userPassword.length() != 0) {
-            		loginAckEvent = AuctionClient.m_clientStub.syncLoginCM(userID, userPassword);
+            		//loginAckEvent = AuctionClient.m_clientStub.loginCM(userID, userPassword);
+            		//////////////////////boolean res = AuctionClient.m_clientStub.loginCM(userID, userPassword);
             		
-            		if (loginAckEvent != null) {           			
-                		if (loginAckEvent.isValidUser() == 0){
-                			errorMessage = "Check your id or password!";
-                			JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-                		}
-                		else if (loginAckEvent.isValidUser() == -1) {
-                			errorMessage = "Already login that id!";
-                			JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-                		}
-                		else {
-                			AuctionGui auctionGui = new AuctionGui();
-    						auctionGui.setVisible(true);           			
-                			loginFlag = false;
-                		}
-            		}            		
+//            		if (loginAckEvent != null) {           			
+//                		if (loginAckEvent.isValidUser() == 0){
+//                			errorMessage = "Check your id or password!";
+//                			JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+//                		}
+//                		else if (loginAckEvent.isValidUser() == -1) {
+//                			errorMessage = "Already login that id!";
+//                			JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+//                		}
+//                		else {
+//                			AuctionGui auctionGui = new AuctionGui();
+//    						auctionGui.setVisible(true);           			
+//                			loginFlag = false;
+//                		}
+//            		}            		
             	}            	     
 			}
 		});
