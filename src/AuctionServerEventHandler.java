@@ -1,13 +1,16 @@
+import kr.ac.konkuk.ccslab.cm.entity.CMUser;
 import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMSessionEvent;
 import kr.ac.konkuk.ccslab.cm.event.handler.CMAppEventHandler;
 import kr.ac.konkuk.ccslab.cm.info.CMConfigurationInfo;
 import kr.ac.konkuk.ccslab.cm.info.CMInfo;
+import kr.ac.konkuk.ccslab.cm.info.CMInteractionInfo;
 import kr.ac.konkuk.ccslab.cm.manager.CMDBManager;
 import kr.ac.konkuk.ccslab.cm.stub.CMServerStub;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AuctionServerEventHandler implements CMAppEventHandler {
 	private AuctionServer m_server;
@@ -55,10 +58,10 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 //		case CMInfo.CM_INTEREST_EVENT:
 //			processInterestEvent(cme);
 //			break;
-		case CMInfo.CM_DUMMY_EVENT:
-			System.out.println("CM_DUMMY_EVENT");
-			processDummyEvent(cme);
-			break;
+//		case CMInfo.CM_DUMMY_EVENT:
+//			System.out.println("CM_DUMMY_EVENT");
+//			processDummyEvent(cme);
+//			break;
 //		case CMInfo.CM_USER_EVENT:
 //			processUserEvent(cme);
 //			break;
@@ -100,8 +103,29 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 				}
 				else
 				{
+					CMInteractionInfo interInfo = m_serverStub.getCMInfo().getInteractionInfo();
+					CMUser myself = interInfo.getMyself();
 					System.out.println("["+se.getUserName()+"] authentication succeeded.");
 					m_serverStub.replyEvent(se, 1);
+					
+					CMDummyEvent due = new CMDummyEvent();
+					due.setHandlerSession(myself.getCurrentSession());
+					due.setHandlerGroup(myself.getCurrentGroup()); 
+					String tmp="";
+				    try{
+						ResultSet rs = CMDBManager.sendSelectQuery("SELECT name,start_price,due_date FROM item", m_serverStub.getCMInfo());
+					    while(rs.next()) {
+					    	tmp += rs.getString(1)+"#";
+					    	tmp += rs.getString(2)+"#";
+					    	tmp += rs.getString(3)+"#";					    	
+					    	tmp += "ÀÔÂû"+"#";
+					    }
+				    }catch(SQLException e) {
+				    }
+				    tmp=tmp.substring(0, tmp.length()-1);
+				    System.out.println(tmp);
+			    	due.setDummyInfo(tmp);
+					m_serverStub.send(due, se.getSender());
 				}
 			}
 			break;

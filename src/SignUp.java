@@ -248,7 +248,7 @@ public class SignUp extends JFrame
         add(loginPanel, gbc);
 
         setSize( 250, 350 );
-        setVisible(true);
+//        setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 

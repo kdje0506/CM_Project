@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,27 +22,32 @@ public class ItemDescription {
 	private JTextField DayField;
 	private JTextField ClockField;
 	private JTextField DescriptionField;
+	
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ItemDescription window = new ItemDescription();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ItemDescription window = new ItemDescription();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
-	public ItemDescription() {
+	public ItemDescription(CMClientStub clientStub, AuctionClient client) {
+		m_client = client;
+		m_clientStub = clientStub;
 		initialize();
 	}
 

@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
+import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMSessionEvent;
 import kr.ac.konkuk.ccslab.cm.event.handler.CMAppEventHandler;
@@ -94,9 +95,9 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 //		case CMInfo.CM_DATA_EVENT:
 //			processDataEvent(cme);
 //			break;
-//		case CMInfo.CM_DUMMY_EVENT:
-//			processDummyEvent(cme);
-//			break;
+		case CMInfo.CM_DUMMY_EVENT:
+			processDummyEvent(cme);
+			break;
 //		case CMInfo.CM_USER_EVENT:
 //			processUserEvent(cme);
 //			break;
@@ -253,6 +254,26 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 //		}
 	}
 	
+	private void processDummyEvent(CMEvent cme)
+	{
+		CMDummyEvent due = (CMDummyEvent) cme;
+
+		String due_tmp = due.getDummyInfo();
+
+		String[] tmp = due_tmp.split("#");
+		System.out.println(tmp.length);
+		int rowLength = tmp.length / 4;
+			
+		String[][] input = new String[rowLength][4];
+			
+		for(int i=0;i<rowLength;i++) {
+			for(int j=0;j<4;j++) {
+				input[i][j]=tmp[4*i+j];
+				}
+			}
+		
+		m_client.getAuctionGui().setContent(input);
+		
 //	public void processSessionEvent(CMSessionEvent se) {
 //		switch (se.getID()) {
 //		case CMSessionEvent.REGISTER_USER_ACK:
@@ -276,5 +297,5 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 //			return;
 //		}
 //	}
-
+	}
 }

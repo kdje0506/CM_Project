@@ -28,7 +28,7 @@ public class AuctionGui extends JFrame {
 
 	JFrame frame;
 	private JTable table;
-	
+	private String[][] content;
 	private AuctionClient m_client;
 	private CMClientStub m_clientStub;
 
@@ -54,8 +54,11 @@ public class AuctionGui extends JFrame {
 	public AuctionGui(CMClientStub clientStub, AuctionClient client) {
 		m_client = client;
 		m_clientStub = clientStub;
-		
+		content = new String[][] {{}};
 		initialize();
+	}
+	public void setContent(String[][] in) {
+		content = in;
 	}
 
 	/**
@@ -80,9 +83,7 @@ public class AuctionGui extends JFrame {
 		
 		
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"수건", "20-10-15", "100", "입찰"},
-			},
+			content,
 			new String[] {
 				"물품 명", "마감날짜", "최고 입찰가", "입찰"
 			}
@@ -96,9 +97,9 @@ public class AuctionGui extends JFrame {
 		});
 		
 		table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());;
-		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
+		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField(),m_clientStub,m_client));
 		table.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());;
-		table.getColumnModel().getColumn(0).setCellEditor(new ButtonEditor(new JTextField()));		
+		table.getColumnModel().getColumn(0).setCellEditor(new ButtonEditor(new JTextField(),m_clientStub,m_client));		
 		
 		scrollPane.setViewportView(table);
 		
@@ -155,70 +156,72 @@ public Component getTableCellRendererComponent(JTable table, Object obj,
 //BUTTON EDITOR CLASS
 class ButtonEditor extends DefaultCellEditor
 {
-protected JButton btn;
- private String lbl;
- private Boolean clicked;
- private int fieldcol;
+	protected JButton btn;
+	private String lbl;
+	private Boolean clicked;
+	private int fieldcol;
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
 
- public ButtonEditor(JTextField txt) {
-  super(txt);
+	public ButtonEditor(JTextField txt,CMClientStub clientStub, AuctionClient client) {
+		super(txt);
+		m_client = client;
+		m_clientStub = clientStub;
 
-  btn=new JButton();
-  btn.setOpaque(true);
+		btn=new JButton();
+		btn.setOpaque(true);
 
-  //WHEN BUTTON IS CLICKED
-  btn.addActionListener(new ActionListener() {
+		//WHEN BUTTON IS CLICKED
+		btn.addActionListener(new ActionListener() {
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fireEditingStopped();
+			}
+		});
+	}
 
-      fireEditingStopped();
-    }
-  });
-}
-
- //OVERRIDE A COUPLE OF METHODS
- @Override
-public Component getTableCellEditorComponent(JTable table, Object obj,
+	//OVERRIDE A COUPLE OF METHODS
+	@Override
+	public Component getTableCellEditorComponent(JTable table, Object obj,
     boolean selected, int row, int col) {
 
     //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
-   lbl=(obj==null) ? "":obj.toString();
-   btn.setText(lbl);
-   fieldcol = col;
-   clicked=true;
-  return btn;
-}
+	lbl=(obj==null) ? "":obj.toString();
+	btn.setText(lbl);
+	fieldcol = col;
+	clicked=true;
+	return btn;
+	}
 
 //IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
- @Override
-public Object getCellEditorValue() {
+	@Override
+	public Object getCellEditorValue() {
 	 
-   if(clicked&&fieldcol==3)
-    {
-	   SetPrice setprice = new SetPrice();
-	   setprice.frame.setVisible(true);
-    }else if(clicked&&fieldcol==0)
-    {
-    	ItemDescription itemDes = new ItemDescription();
-		itemDes.frame.setVisible(true);
-    }
-  //SET IT TO FALSE NOW THAT ITS CLICKED
-  clicked=false;
-  return new String(lbl);
-}
+		if(clicked&&fieldcol==3)
+		{
+			SetPrice setprice = m_client.getSetPrice();
+			setprice.frame.setVisible(true);
+		}else if(clicked&&fieldcol==0){
+			
+			ItemDescription itemDes = m_client.getItemDescription();
+			itemDes.frame.setVisible(true);
+		}
+		//SET IT TO FALSE NOW THAT ITS CLICKED
+		clicked=false;
+		return new String(lbl);
+	}
 
- @Override
-public boolean stopCellEditing() {
-
+	@Override
+	public boolean stopCellEditing() {
        //SET CLICKED TO FALSE FIRST
-    clicked=false;
-  return super.stopCellEditing();
-}
+		clicked=false;
+		return super.stopCellEditing();
+	}
 
- @Override
-protected void fireEditingStopped() {
-  // TODO Auto-generated method stub
-  super.fireEditingStopped();
-}
+	@Override
+	protected void fireEditingStopped() {
+		// TODO Auto-generated method stub
+		super.fireEditingStopped();
+	}
 }

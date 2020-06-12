@@ -5,7 +5,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 
 import kr.ac.konkuk.ccslab.cm.entity.CMUser;
 import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
