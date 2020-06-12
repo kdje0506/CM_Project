@@ -5,6 +5,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 
 public class ItemDescription {
@@ -137,6 +140,11 @@ public class ItemDescription {
 		ConfirmButton.setBounds(517, 349, 97, 23);
 		frame.getContentPane().add(ConfirmButton);
 		
+		ConfirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+			}
+		});
 		
 	}
 

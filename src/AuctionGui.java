@@ -91,6 +91,9 @@ public class AuctionGui extends JFrame {
 		JButton btnNewButton = new JButton("\uB85C\uADF8\uC544\uC6C3");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
+				Login login = new Login();
+				login.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(12, 524, 110, 29);

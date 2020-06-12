@@ -96,6 +96,7 @@ public class SetPrice {
 		JButton CancelButton = new JButton("√Îº“");
 		CancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frame.setVisible(false);
 			}
 		});
 		CancelButton.setBounds(370, 248, 97, 23);
