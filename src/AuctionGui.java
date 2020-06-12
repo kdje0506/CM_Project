@@ -18,7 +18,7 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.Component;
 
-public class AuctionGui {
+public class AuctionGui extends JFrame {
 
 	JFrame frame;
 	private JTable table;
