@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.border.*;
 
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
+
 import java.sql.*;
 
 //import kr.ac.konkuk.ccslab.cm.info.CMInfo;
@@ -12,7 +14,7 @@ import java.sql.*;
 
 
 
-public class test extends JFrame
+public class SignUp extends JFrame
 {
     JLabel lb1,lb2,la1,la2,la3;
     JTextField id;
@@ -21,6 +23,9 @@ public class test extends JFrame
     JPanel idPanel,pwdPanel,namePanel,loginPanel;
     JButton b1,b2;
     
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
+	
     public static boolean registerFlag = false;	
     
     // MySQL driver
@@ -34,9 +39,11 @@ public class test extends JFrame
     private Connection conn = null;
     private Statement state = null;
 
-    public test()
+    public SignUp(CMClientStub clientStub, AuctionClient client) {
     {
-        super( "Sign Up" );
+		m_client = client;
+		m_clientStub = clientStub;
+		
         setLayout( new GridBagLayout());
         setBackground(Color.BLACK);
 
@@ -165,7 +172,7 @@ public class test extends JFrame
 						// If newUserId value doesn't exist, it's possible to submit new user information in cmdb
 	    				else {
 	    					// register user
-	    					AuctionClient.m_clientStub.registerUser(newUserID, newUserPassword);
+	    					m_clientStub.registerUser(newUserID, newUserPassword);
 	    					try {
 								Thread.sleep(3000);
 							} catch (InterruptedException e1) {
@@ -211,7 +218,7 @@ public class test extends JFrame
                 	
             	}
             	
-            	AuctionClient.m_clientStub.logoutCM();
+            	m_clientStub.logoutCM();
                 dispose();
             }
         });
@@ -250,8 +257,9 @@ public class test extends JFrame
 
         this.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2); 
     }
-
-    public static void main(String args[]){
-        new test();
     }
+
+//    public static void main(String args[]){
+//        new SignUp();
+//    }
 }

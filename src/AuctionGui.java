@@ -6,6 +6,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -25,27 +28,33 @@ public class AuctionGui extends JFrame {
 
 	JFrame frame;
 	private JTable table;
+	
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AuctionGui window = new AuctionGui();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					AuctionGui window = new AuctionGui();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
-	public AuctionGui() {
+	public AuctionGui(CMClientStub clientStub, AuctionClient client) {
+		m_client = client;
+		m_clientStub = clientStub;
+		
 		initialize();
 	}
 
@@ -97,8 +106,8 @@ public class AuctionGui extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
-				Login login = new Login();
-				login.setVisible(true);
+				Login lg = m_client.getLogin();
+				lg.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(12, 524, 110, 29);

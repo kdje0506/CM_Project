@@ -1,3 +1,4 @@
+import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMSessionEvent;
 import kr.ac.konkuk.ccslab.cm.event.handler.CMAppEventHandler;
@@ -9,7 +10,31 @@ import kr.ac.konkuk.ccslab.cm.stub.CMServerStub;
 import java.sql.ResultSet;
 
 public class AuctionServerEventHandler implements CMAppEventHandler {
+	private AuctionServer m_server;
+	private CMServerStub m_serverStub;
+	private int m_nCheckCount;	// for internal forwarding simulation
+	private boolean m_bDistFileProc;	// for distributed file processing
+
+	// information for csc_ftp
+	private boolean m_bStartCSCFTPSession;
+	private String m_strFileSender;
+	private String m_strFileReceiver;
+	private int m_nTotalNumFilesPerSession;
+	private int m_nCurNumFilesPerSession;
 	
+	public AuctionServerEventHandler(CMServerStub serverStub, AuctionServer server)
+	{
+		m_server = server;
+		m_serverStub = serverStub;
+		m_nCheckCount = 0;
+		m_bDistFileProc = false;
+		
+		m_bStartCSCFTPSession = false;
+		m_strFileSender = null;
+		m_strFileReceiver = null;
+		m_nTotalNumFilesPerSession = 0;
+		m_nCurNumFilesPerSession = 0;
+	}
 //	@Override
 //	public void processEvent(CMEvent event) {
 //		if (event instanceof CMSessionEvent) {
@@ -21,6 +46,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 	@Override
 	public void processEvent(CMEvent cme) {
 		// TODO Auto-generated method stub
+		System.out.println("cme.getType()");
 		switch(cme.getType())
 		{
 		case CMInfo.CM_SESSION_EVENT:
@@ -29,9 +55,10 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 //		case CMInfo.CM_INTEREST_EVENT:
 //			processInterestEvent(cme);
 //			break;
-//		case CMInfo.CM_DUMMY_EVENT:
-//			processDummyEvent(cme);
-//			break;
+		case CMInfo.CM_DUMMY_EVENT:
+			System.out.println("CM_DUMMY_EVENT");
+			processDummyEvent(cme);
+			break;
 //		case CMInfo.CM_USER_EVENT:
 //			processUserEvent(cme);
 //			break;
@@ -54,8 +81,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 	
 	private void processSessionEvent(CMEvent cme)
 	{
-		CMServerStub m_serverStub =  AuctionServer.m_serverStub;
-		CMConfigurationInfo confInfo = AuctionServer.m_serverStub.getCMInfo().getConfigurationInfo();
+		CMConfigurationInfo confInfo = m_serverStub.getCMInfo().getConfigurationInfo();
 		CMSessionEvent se = (CMSessionEvent) cme;
 		switch(se.getID())
 		{
@@ -118,6 +144,16 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 		default:
 			return;
 		}
+	}
+	
+	private void processDummyEvent(CMEvent cme)
+	{
+		CMDummyEvent due = (CMDummyEvent) cme;
+		//System.out.println("session("+due.getHandlerSession()+"), group("+due.getHandlerGroup()+")");
+		System.out.println("session("+due.getHandlerSession()+"), group("+due.getHandlerGroup()+")\n");
+		//System.out.println("dummy msg: "+due.getDummyInfo());
+		System.out.println("dummy msg: "+due.getDummyInfo()+"\n");
+		return;
 	}
 	
 //	public void processSessionEvent(CMSessionEvent se) {

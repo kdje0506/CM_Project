@@ -1,9 +1,74 @@
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+
 import kr.ac.konkuk.ccslab.cm.event.CMEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMSessionEvent;
 import kr.ac.konkuk.ccslab.cm.event.handler.CMAppEventHandler;
 import kr.ac.konkuk.ccslab.cm.info.CMInfo;
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
 
 public class AuctionClientEventHandler implements CMAppEventHandler {
+	//private JTextArea m_outTextArea;
+		private AuctionClient m_client;
+		private CMClientStub m_clientStub;
+		private long m_lDelaySum;	// for forwarding simulation
+		// for delay of SNS content downloading, distributed file processing, server response,
+		// csc-ftp, c2c-ftp
+		private long m_lStartTime;
+		private int m_nEstDelaySum;	// for SNS downloading simulation
+		private int m_nSimNum;		// for simulation of multiple sns content downloading
+		private FileOutputStream m_fos;	// for storing downloading delay of multiple SNS content
+		private PrintWriter m_pw;		//
+		private int m_nCurrentServerNum;	// for distributed file processing
+		private int m_nRecvPieceNum;		// for distributed file processing
+		private boolean m_bDistFileProc;	// for distributed file processing
+		private String m_strExt;			// for distributed file processing
+		private String[] m_filePieces;		// for distributed file processing
+		private boolean m_bReqAttachedFile;	// for storing the fact that the client requests an attachment
+		private int m_nMinNumWaitedEvents;  // for checking the completion of asynchronous castrecv service
+		private int m_nRecvReplyEvents;		// for checking the completion of asynchronous castrecv service
+		
+		// information for csc-ftp and c2c-ftp experiments
+		private String m_strFileSender;
+		private String m_strFileReceiver;
+		private File[] m_arraySendFiles;
+		private int m_nTotalNumFTPSessions;
+		private int m_nCurNumFTPSessions;
+		// information for c2c-ftp experiments
+		private boolean m_bStartC2CFTPSession;
+		private int m_nTotalNumFilesPerSession;
+		private int m_nCurNumFilesPerSession;
+		
+		public AuctionClientEventHandler(CMClientStub clientStub, AuctionClient client)
+		{
+			m_client = client;
+			//m_outTextArea = textArea;
+			m_clientStub = clientStub;
+			m_lDelaySum = 0;
+			m_lStartTime = 0;
+			m_nEstDelaySum = 0;
+			m_nSimNum = 0;
+			m_fos = null;
+			m_pw = null;
+			m_nCurrentServerNum = 0;
+			m_nRecvPieceNum = 0;
+			m_bDistFileProc = false;
+			m_strExt = null;
+			m_filePieces = null;
+			m_bReqAttachedFile = false;
+			m_nMinNumWaitedEvents = 0;
+			m_nRecvReplyEvents = 0;
+			
+			m_strFileSender = null;
+			m_strFileReceiver = null;
+			m_arraySendFiles = null;
+			m_nTotalNumFTPSessions = 0;
+			m_nCurNumFTPSessions = 0;
+			m_bStartC2CFTPSession = false;
+			m_nTotalNumFilesPerSession = 0;
+			m_nCurNumFilesPerSession = 0;
+		}
 
 //	@Override
 //	public void processEvent(CMEvent event) {
@@ -70,8 +135,8 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 			else
 			{
 //				System.out.println("This client successfully logs in to the default server.");
-				AuctionGui window = new AuctionGui();
-	            window.frame.setVisible(true);
+				AuctionGui ag = m_client.getAuctionGui();
+	            ag.frame.setVisible(true);
 	            
 	            //dispose();
 			}

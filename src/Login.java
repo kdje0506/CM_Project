@@ -7,6 +7,7 @@ import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 import kr.ac.konkuk.ccslab.cm.event.CMSessionEvent;
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,28 +22,38 @@ public class Login extends JFrame {
 	private JTextField id;
 	private JPasswordField pwd;
 	
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
+	
 	public static boolean loginFlag = false;
+	
 	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Login frame = new Login();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Login() {
+	public Login(CMClientStub clientStub, AuctionClient client) {
+		m_client = client;
+		//m_outTextArea = textArea;
+		m_clientStub = clientStub;
+		System.out.println("```````````````````````````````````````````");
+		System.out.println(m_clientStub);
+		
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 200, 450, 300);
@@ -103,8 +114,9 @@ public class Login extends JFrame {
             	}
             	
             	else if(userID.length() != 0 && userPassword.length() != 0) {
+            		//System.out.println(m_clientStub);
             		
-            		boolean bRequestResult = AuctionClient.m_clientStub.loginCM(userID, userPassword);
+            		boolean bRequestResult = m_clientStub.loginCM(userID, userPassword);
         			if(bRequestResult)
         			{
         				System.out.println("successfully sent the login request.\n");

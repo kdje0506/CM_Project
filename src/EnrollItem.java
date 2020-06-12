@@ -2,10 +2,24 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import com.sun.xml.internal.ws.util.StringUtils;
+
+import kr.ac.konkuk.ccslab.cm.entity.CMUser;
+import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
+import kr.ac.konkuk.ccslab.cm.info.CMInteractionInfo;
+import kr.ac.konkuk.ccslab.cm.manager.CMDBManager;
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
+
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 
 
@@ -19,6 +33,10 @@ public class EnrollItem {
 	private JTextField DayField;
 	private JTextField ClockField;
 	private JTextField DescriptionField;
+	
+	private JPanel contentPane;
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
 
 	/**
 	 * Launch the application.
@@ -35,7 +53,16 @@ public class EnrollItem {
 			}
 		});
 	}
-
+	
+	public EnrollItem(CMClientStub clientStub, AuctionClient client)
+	{
+		m_client = client;
+		//m_outTextArea = textArea;
+		m_clientStub = clientStub;
+		
+		initialize();
+	}
+	
 	/**
 	 * Create the application.
 	 */
@@ -131,9 +158,46 @@ public class EnrollItem {
 		JButton Enroll = new JButton("등록");
 		Enroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EnrollSuccess enrollsuccess = new EnrollSuccess();
-				enrollsuccess.frame.setVisible(true);
-				frame.dispose();
+				HashMap<String, String> inputData = new HashMap<String, String>();
+				inputData.put("name", NameField.getText());
+				inputData.put("price", PriceField.getText());
+				inputData.put("year", YearField.getText());
+				inputData.put("month", MonthField.getText());
+				inputData.put("day", DayField.getText());
+				inputData.put("hour", ClockField.getText());
+				inputData.put("description", DescriptionField.getText());
+				
+				
+				
+				if(isVaildForm(inputData)) {
+					System.out.println("적법한 형식");
+					
+					CMInteractionInfo interInfo = m_clientStub.getCMInfo().getInteractionInfo(); 
+					CMUser myself = interInfo.getMyself();
+					
+					CMDummyEvent due = new CMDummyEvent(); 
+					due.setHandlerSession(myself.getCurrentSession()); 
+					due.setHandlerGroup(myself.getCurrentGroup()); 
+					due.setDummyInfo("123123123");
+					m_clientStub.send(due, "SERVER");
+					
+					
+//					String date = String.format("'%s-%s-%s %s:00:00'", 
+//							inputData.get("year"),inputData.get("month"), inputData.get("day"),
+//							inputData.get("hour"));
+//					
+//					String query = String.format("INSERT INTO item VALUES ('%s',%s,'%s','%s',%s,'f','%s')", 
+//							inputData.get("name"),inputData.get("price"),date,
+//							inputData.get("description"),"0",inputData.get("name"));
+//					System.out.println(query);
+					
+					//CMDBManager.sendUpdateQuery(query,AuctionServer.m_serverStub.getCMInfo());
+					EnrollSuccess enrollsuccess = new EnrollSuccess();
+					enrollsuccess.frame.setVisible(true);
+					frame.dispose();
+				}
+				
+				
 			}
 		});
 		Enroll.setBounds(376, 371, 97, 23);
@@ -148,5 +212,35 @@ public class EnrollItem {
 		});
 		Cancel.setBounds(492, 371, 97, 23);
 		frame.getContentPane().add(Cancel);
+	}
+	
+	private void updateList() {
+		String query = String.format("INSERT INTO item VALUES (%s,%s,%s,%s,%s,%s,%s)", 
+				"'tt1'","0","'2012-06-18 10:34:09'",
+				"'de'","0","'f'","'tt'");
+		//CMDBManager.sendUpdateQuery(query,m_serverStub.getCMInfo());
+		//(name,start_price,due_date,description,now_price)
+	}
+	
+	public boolean isVaildForm(HashMap<String, String> in) {
+		
+		System.out.println("예외처리 메시지 팝업 필요함");
+		// 숫자 예외처리 필요
+		// 이름 예외처리
+		if(in.get("name").length() == 0) {
+			return false;
+		} else if(in.get("price").length() == 0){
+			return false;
+		} else if(in.get("year").length() == 0){
+			return false;
+		} else if(in.get("day").length() == 0){
+			return false;
+		} else if(in.get("hour").length() == 0){
+			return false;
+		} else if(in.get("description").length() == 0){
+			return false;
+		}
+		return true;
+		
 	}
 }
