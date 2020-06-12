@@ -72,6 +72,7 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 //				System.out.println("This client successfully logs in to the default server.");
 				AuctionGui window = new AuctionGui();
 	            window.frame.setVisible(true);
+	            
 	            //dispose();
 			}
 			break;

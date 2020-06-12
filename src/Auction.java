@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class Auction extends JFrame {
 
@@ -52,12 +53,13 @@ public class Auction extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Auction");
-		lblNewLabel.setBounds(47, 93, 298, 15);
+		lblNewLabel.setFont(new Font("±¼¸²", Font.PLAIN, 40));
+		lblNewLabel.setBounds(60, 68, 298, 79);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("\uB85C\uADF8\uC778");
-		btnNewButton.setBounds(60, 203, 97, 23);
+		btnNewButton.setBounds(72, 203, 97, 23);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login login = new Login();
@@ -67,7 +69,7 @@ public class Auction extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("\uD68C\uC6D0\uAC00\uC785");
-		btnNewButton_1.setBounds(248, 203, 97, 23);
+		btnNewButton_1.setBounds(255, 203, 97, 23);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AuctionClient.m_clientStub.syncLoginCM("submit", "submit");

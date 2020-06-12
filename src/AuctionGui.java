@@ -14,9 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 public class AuctionGui extends JFrame {
 
@@ -64,12 +67,15 @@ public class AuctionGui extends JFrame {
 		table.setForeground(new Color(0, 0, 0));
 		table.setRowHeight(35);
 		table.setToolTipText("");
+		
+		
+		
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"\uC218\uAC74", "20-10-15", "100", "\uC785\uCC30"},
+				{"수건", "20-10-15", "100", "입찰"},
 			},
 			new String[] {
-				"\uBB3C\uD488 \uBA85", "\uB9C8\uAC10\uB0A0\uC9DC", "\uCD5C\uACE0 \uC785\uCC30\uAC00", "\uC785\uCC30"
+				"물품 명", "마감날짜", "최고 입찰가", "입찰"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
@@ -83,12 +89,11 @@ public class AuctionGui extends JFrame {
 		table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());;
 		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
 		table.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());;
-		table.getColumnModel().getColumn(0).setCellEditor(new ButtonEditor(new JTextField()));
-
+		table.getColumnModel().getColumn(0).setCellEditor(new ButtonEditor(new JTextField()));		
 		
 		scrollPane.setViewportView(table);
 		
-		JButton btnNewButton = new JButton("\uB85C\uADF8\uC544\uC6C3");
+		JButton btnNewButton = new JButton("로그아웃");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
@@ -99,7 +104,7 @@ public class AuctionGui extends JFrame {
 		btnNewButton.setBounds(12, 524, 110, 29);
 		frame.getContentPane().add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("\uBB3C\uD488 \uB4F1\uB85D");
+		JButton btnNewButton_1 = new JButton("물품 등록");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EnrollItem enrollitem = new EnrollItem();

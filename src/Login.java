@@ -88,16 +88,7 @@ public class Login extends JFrame {
             		userPassword += (userPassword.equals("")) ? cha + "" : "" + cha + "";
             	}
             	
-            	boolean bRequestResult = AuctionClient.m_clientStub.loginCM(userID, userPassword);
-    			if(bRequestResult)
-    			{
-    				System.out.println("successfully sent the login request.\n");
-    				
-    			}
-    			else
-    			{
-    				System.out.println("failed the login request!\n");
-    			}
+            	
             	
     			
 				
@@ -112,6 +103,18 @@ public class Login extends JFrame {
             	}
             	
             	else if(userID.length() != 0 && userPassword.length() != 0) {
+            		
+            		boolean bRequestResult = AuctionClient.m_clientStub.loginCM(userID, userPassword);
+        			if(bRequestResult)
+        			{
+        				System.out.println("successfully sent the login request.\n");
+        				setVisible(false);
+        			}
+        			else
+        			{
+        				System.out.println("failed the login request!\n");
+        			}
+            		
             		//loginAckEvent = AuctionClient.m_clientStub.loginCM(userID, userPassword);
             		//////////////////////boolean res = AuctionClient.m_clientStub.loginCM(userID, userPassword);
             		
@@ -129,8 +132,9 @@ public class Login extends JFrame {
 //    						auctionGui.setVisible(true);           			
 //                			loginFlag = false;
 //                		}
-//            		}            		
-            	}            	     
+//            		}  
+            		
+            	}
 			}
 		});
 		contentPane.add(btnNewButton);
@@ -141,7 +145,7 @@ public class Login extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();				
+				setVisible(false);
 			}			
 		});
 		contentPane.add(btnNewButton_1);				
