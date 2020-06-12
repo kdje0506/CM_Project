@@ -35,6 +35,7 @@ public class AuctionClient {
 	private Login lg;
 	private SignUp su;
 	private AuctionGui ag;
+	private SetPrice sp;
 	
 	public AuctionClient() {
 		//m_eventHandler = new AuctionClientEventHandler();
@@ -64,7 +65,7 @@ public class AuctionClient {
 		ei = new EnrollItem(cmStub, this);
 		su = new SignUp(cmStub, this);
 		ag = new AuctionGui(cmStub, this);
-		
+		sp = new SetPrice(cmStub, this);
 	}
 	
 	public Login getLogin() {
@@ -77,6 +78,10 @@ public class AuctionClient {
 	
 	public AuctionGui getAuctionGui() {
 		return ag;
+	}
+	
+	public SetPrice getSetPrice() {
+		return sp;
 	}
 	
 	public static void main(String[] args){

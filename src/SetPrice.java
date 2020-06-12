@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+
+import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -14,27 +17,32 @@ public class SetPrice {
 	private JTextField NameField;
 	private JTextField NowPriceField;
 	private JTextField SetPriceField;
+	
+	private AuctionClient m_client;
+	private CMClientStub m_clientStub;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SetPrice window = new SetPrice();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					SetPrice window = new SetPrice();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
-	public SetPrice() {
+	public SetPrice(CMClientStub clientStub, AuctionClient client){
+		m_client = client;
+		m_clientStub = clientStub;
 		initialize();
 	}
 
