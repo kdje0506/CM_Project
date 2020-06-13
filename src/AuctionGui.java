@@ -54,17 +54,22 @@ public class AuctionGui extends JFrame {
 	public AuctionGui(CMClientStub clientStub, AuctionClient client) {
 		m_client = client;
 		m_clientStub = clientStub;
-		content = new String[][] {{}};
+//		content = new String[][] {};
 		initialize();
 	}
-	public void setContent(String[][] in) {
-		content = in;
+	public void setContent(String[][] in, int r) {
+		content = new String[r][4];
+		for(int i=0; i<r;i++) {
+			for(int j=0; j<4;j++) {
+				content[i][j] = in[i][j];
+			}
+		}
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

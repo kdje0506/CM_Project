@@ -135,9 +135,8 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 			}
 			else
 			{
-//				System.out.println("This client successfully logs in to the default server.");
-				AuctionGui ag = m_client.getAuctionGui();
-	            ag.frame.setVisible(true);
+				System.out.println("This client successfully logs in to the default server.");
+
 	            
 	            //dispose();
 			}
@@ -261,7 +260,7 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 		String due_tmp = due.getDummyInfo();
 
 		String[] tmp = due_tmp.split("#");
-		System.out.println(tmp.length);
+//		System.out.println(tmp.length);
 		int rowLength = tmp.length / 4;
 			
 		String[][] input = new String[rowLength][4];
@@ -272,7 +271,11 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 				}
 			}
 		
-		m_client.getAuctionGui().setContent(input);
+//		System.out.println(input[1][1]);
+		
+		m_client.getAuctionGui().setContent(input,rowLength);
+		m_client.getAuctionGui().initialize();
+		m_client.getAuctionGui().frame.setVisible(true);
 		
 //	public void processSessionEvent(CMSessionEvent se) {
 //		switch (se.getID()) {
