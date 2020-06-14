@@ -16,8 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.Font;
+import java.awt.Frame;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
 
@@ -40,18 +44,18 @@ public class EnrollItem {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					EnrollItem window = new EnrollItem();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					EnrollItem window = new EnrollItem();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 	public EnrollItem(CMClientStub clientStub, AuctionClient client)
 	{
@@ -59,15 +63,21 @@ public class EnrollItem {
 		//m_outTextArea = textArea;
 		m_clientStub = clientStub;
 		
+		System.out.println(m_clientStub);
+		
 		initialize();
+	}
+	
+	public JFrame getJFrame() {
+		return frame;
 	}
 	
 	/**
 	 * Create the application.
 	 */
-	public EnrollItem() {
-		initialize();
-	}
+//	public EnrollItem() {
+//		initialize();
+//	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -170,32 +180,24 @@ public class EnrollItem {
 				
 				if(isVaildForm(inputData)) {
 					System.out.println("적법한 형식");
-					
 					CMInteractionInfo interInfo = m_clientStub.getCMInfo().getInteractionInfo(); 
 					CMUser myself = interInfo.getMyself();
+					
+					String date = String.format("%s-%s-%s %s:00:00", 
+							inputData.get("year"),inputData.get("month"), inputData.get("day"),
+							inputData.get("hour"));
 					
 					CMDummyEvent due = new CMDummyEvent(); 
 					due.setHandlerSession(myself.getCurrentSession()); 
 					due.setHandlerGroup(myself.getCurrentGroup()); 
-					due.setDummyInfo("123123123");
-					m_clientStub.send(due, "SERVER");
-					
-					
-//					String date = String.format("'%s-%s-%s %s:00:00'", 
-//							inputData.get("year"),inputData.get("month"), inputData.get("day"),
-//							inputData.get("hour"));
-//					
-//					String query = String.format("INSERT INTO item VALUES ('%s',%s,'%s','%s',%s,'f','%s')", 
-//							inputData.get("name"),inputData.get("price"),date,
-//							inputData.get("description"),"0",inputData.get("name"));
-//					System.out.println(query);
-					
-					//CMDBManager.sendUpdateQuery(query,AuctionServer.m_serverStub.getCMInfo());
-					EnrollSuccess enrollsuccess = new EnrollSuccess();
-					enrollsuccess.frame.setVisible(true);
-					frame.dispose();
+					due.setDummyInfo(String.format("EnrollItem#'%s'#%s#'%s'#'%s'#%s#'f'#'%s'", 
+							inputData.get("name"),inputData.get("price"),date,
+							inputData.get("description"),"0",inputData.get("name")));
+					m_clientStub.send(due, "SERVER");}
+				else {
+					m_client.getEnrollResult().setMsg("적절하지 않은 형식입니다.");
+					m_client.getEnrollResult().getJFrame().setVisible(true);
 				}
-				
 				
 			}
 		});
@@ -221,25 +223,50 @@ public class EnrollItem {
 		//(name,start_price,due_date,description,now_price)
 	}
 	
+	private boolean isNumeric(String str) {
+		return str.matches("-?\\d+(\\.\\d+)?");  
+	}
+	
 	public boolean isVaildForm(HashMap<String, String> in) {
-		
-		System.out.println("예외처리 메시지 팝업 필요함");
-		// 숫자 예외처리 필요
-		// 이름 예외처리
-		if(in.get("name").length() == 0) {
-			return false;
-		} else if(in.get("price").length() == 0){
-			return false;
-		} else if(in.get("year").length() == 0){
-			return false;
-		} else if(in.get("day").length() == 0){
-			return false;
-		} else if(in.get("hour").length() == 0){
-			return false;
-		} else if(in.get("description").length() == 0){
+		if(in.get("name").length() == 0 || in.get("price").length() == 0 ||
+				in.get("year").length() == 0 || in.get("day").length() == 0 || in.get("month").length() == 0 ||
+				in.get("hour").length() == 0 || in.get("description").length() == 0 ||
+				isNumeric(in.get("name")) || !isNumeric(in.get("price")) ||
+				!isNumeric(in.get("year")) || !isNumeric(in.get("day")) ||
+				!isNumeric(in.get("hour"))) {
 			return false;
 		}
+		int year = Integer.parseInt(in.get("year"));
+		int month = Integer.parseInt(in.get("month"));
+		int day = Integer.parseInt(in.get("day"));
+		int hour = Integer.parseInt(in.get("hour"));
+		
+		if(year < 2000 || year > 2500 || month < 1 || month > 12 ||
+				day < 1 || day > 31 || hour < 1 || hour > 24) {
+			return false;
+		}
+		String date = String.format("%s-%02d-%02d %02d:00:00", 
+				year, month,day,hour);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
+		if(dateTime.isBefore(LocalDateTime.now())) {
+			return false;
+		}
+		
 		return true;
+//		if(in.get("name").length() == 0) {
+//			return false;
+//		} else if(in.get("price").length() == 0){
+//			return false;
+//		} else if(in.get("year").length() == 0){
+//			return false;
+//		} else if(in.get("day").length() == 0){
+//			return false;
+//		} else if(in.get("hour").length() == 0){
+//			return false;
+//		} else if(in.get("description").length() == 0){
+//			return false;
+//		}
 		
 	}
 }

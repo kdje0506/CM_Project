@@ -258,9 +258,30 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 		CMDummyEvent due = (CMDummyEvent) cme;
 
 		String due_tmp = due.getDummyInfo();
-
+		System.out.println("receive dummy msg: "+due.getDummyInfo()+"\n");
 		String[] tmp = due_tmp.split("#");
-//		System.out.println(tmp.length);
+		
+		if(tmp.length == 0 ) {
+			return;
+		}else if(tmp[0].equals("EnrollItemAck")) {
+			EnrollResult er = m_client.getEnrollResult();
+			switch (tmp[1]) {
+			case "0":
+				er.setMsg("등록에 실패하였습니다.");
+				break;
+			case "1":
+				er.setMsg("정상적으로 등록되었습니다.");
+				break;
+			default:
+				er.setMsg("등록에 실패하였습니다.");
+				break;
+			}
+			er.frame.setVisible(true);
+			m_client.getEnrollItem().getJFrame().dispose();
+		}
+		
+		
+		System.out.println(tmp.length);
 		int rowLength = tmp.length / 4;
 			
 		String[][] input = new String[rowLength][4];
@@ -270,8 +291,6 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 				input[i][j]=tmp[4*i+j];
 				}
 			}
-		
-//		System.out.println(input[1][1]);
 		
 		m_client.getAuctionGui().setContent(input,rowLength);
 		m_client.getAuctionGui().initialize();

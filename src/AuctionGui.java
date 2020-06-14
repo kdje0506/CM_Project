@@ -122,7 +122,7 @@ public class AuctionGui extends JFrame {
 		JButton btnNewButton_1 = new JButton("물품 등록");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EnrollItem enrollitem = new EnrollItem();
+				EnrollItem enrollitem = m_client.getEnrollItem();
 				enrollitem.frame.setVisible(true);
 			}
 		});

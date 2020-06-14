@@ -177,6 +177,39 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 		System.out.println("session("+due.getHandlerSession()+"), group("+due.getHandlerGroup()+")\n");
 		//System.out.println("dummy msg: "+due.getDummyInfo());
 		System.out.println("dummy msg: "+due.getDummyInfo()+"\n");
+		
+		String[] data = due.getDummyInfo().split("#");
+		for(String s: data) {
+			System.out.println(s);
+		}
+		System.out.println(data[0]);
+		if(data.length == 0) {
+			return;
+		} else if(data[0].equals("EnrollItem")) {
+			String query = String.format("INSERT "
+					+ "INTO item(name,start_price,due_date,description,now_price,status,bid_winner) "
+					+ "VALUES (%s,%s,%s,%s,%s,%s,%s)", 
+					data[1],data[2],data[3],
+					data[4],data[5],data[6],data[7]);
+			System.out.println(query);
+	
+			int res = CMDBManager.sendUpdateQuery(query,m_serverStub.getCMInfo());
+			System.out.println(res);
+			
+			CMDummyEvent ackMsg = new CMDummyEvent(); 
+			ackMsg.setHandlerSession(due.getHandlerSession()); 
+			ackMsg.setHandlerGroup(due.getHandlerGroup()); 
+			System.out.println("11111111111111111111111111");
+			if(res == 1) {
+				System.out.println("2222222222222222222");
+				ackMsg.setDummyInfo("EnrollItemAck#1");
+			}
+			else {
+				ackMsg.setDummyInfo("EnrollItemAck#0");
+			}
+			m_serverStub.send(ackMsg, due.getSender());
+		}
+		
 		return;
 	}
 	
