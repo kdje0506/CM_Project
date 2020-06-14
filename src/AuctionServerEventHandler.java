@@ -169,7 +169,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 					data[1],data[2],data[3],
 					data[4],data[5],data[6],data[7]);
 			System.out.println(query);
-	
+
 			int res = CMDBManager.sendUpdateQuery(query,m_serverStub.getCMInfo());
 			System.out.println(res);
 			
@@ -228,6 +228,9 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 			}catch(SQLException e) {}
 			ID.setDummyInfo(tmp2);
 			m_serverStub.send(ID, due.getSender());
+		}
+		else if(data[0].equals("updateList")){
+			sendItemList(due.getSender());
 		}
 		else if(data[0].equals("ItemDescription")) {
 			CMDummyEvent ID = new CMDummyEvent();

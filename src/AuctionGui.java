@@ -102,6 +102,7 @@ public class AuctionGui extends JFrame {
 		});
 		btnNewButton.setBounds(12, 524, 110, 29);
 		frame.getContentPane().add(btnNewButton);
+
 		
 		JButton btnNewButton_1 = new JButton("물품 등록");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -113,7 +114,31 @@ public class AuctionGui extends JFrame {
 		});
 		btnNewButton_1.setBounds(464, 524, 110, 29);
 		frame.getContentPane().add(btnNewButton_1);
-		
+
+		JButton btnNewButton_2 = new JButton("목록 갱신");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				///목록 갱신하기
+				CMInteractionInfo interInfo = m_clientStub.getCMInfo().getInteractionInfo();
+				CMUser myself = interInfo.getMyself();
+
+				CMDummyEvent due = new CMDummyEvent();
+
+				String tmp = "updateList";
+
+				due.setDummyInfo(tmp);
+
+				due.setHandlerSession(myself.getCurrentSession());
+				due.setHandlerGroup(myself.getCurrentGroup());
+
+				m_clientStub.send(due, "SERVER");
+				frame.dispose();
+			}
+		});
+		btnNewButton_2.setBounds(200, 524, 110, 29);
+		frame.getContentPane().add(btnNewButton_2);
+
+
 		JLabel lblNewLabel = new JLabel("Auction List");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 50));
