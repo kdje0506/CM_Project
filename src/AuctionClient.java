@@ -1,27 +1,5 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import kr.ac.konkuk.ccslab.cm.manager.CMDBManager;
 import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
-
-//public class AuctionClient {
-//	public static CMClientStub m_clientStub = new CMClientStub(); 
-//	private AuctionClientEventHandler m_eventHandler;
-//	
-//	public AuctionClient() {
-//		m_eventHandler = new AuctionClientEventHandler();
-//	}
-//		
-//	public AuctionClientEventHandler getClientEventHandler() {
-//		return m_eventHandler;
-//	}
-//	
-//	public static void main(String[] args) {
-//		AuctionClient client = new AuctionClient();
-//		m_clientStub.setAppEventHandler(client.getClientEventHandler());
-//		m_clientStub.startCM();
-//	}
-//}
 
 public class AuctionClient {
 	public CMClientStub m_clientStub; 
@@ -40,10 +18,8 @@ public class AuctionClient {
 	private EnrollResult er;
 	
 	public AuctionClient() {
-		//m_eventHandler = new AuctionClientEventHandler();
 		m_clientStub = new CMClientStub();
 		m_eventHandler = new AuctionClientEventHandler(m_clientStub, this);
-
 	}
 	
 	public CMClientStub getClientStub()
@@ -75,15 +51,12 @@ public class AuctionClient {
 	public Login getLogin() {
 		return lg;
 	}
-	
 	public SignUp getSignUp() {
 		return su;
 	}
-	
 	public AuctionGui getAuctionGui() {
 		return ag;
 	}
-	
 	public SetPrice getSetPrice() {
 		return sp;
 	}
@@ -95,6 +68,9 @@ public class AuctionClient {
 	}
 	public EnrollResult getEnrollResult() {
 		return er;
+	}
+	public Auction getAuction() {
+		return ac;
 	}
 	
 	public static void main(String[] args){

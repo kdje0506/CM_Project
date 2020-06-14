@@ -7,6 +7,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import kr.ac.konkuk.ccslab.cm.entity.CMUser;
+import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
+import kr.ac.konkuk.ccslab.cm.info.CMInteractionInfo;
 import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
 
 import javax.swing.DefaultCellEditor;
@@ -27,34 +30,14 @@ import java.awt.Dimension;
 public class AuctionGui extends JFrame {
 
 	JFrame frame;
-	private JTable table;
+	public JTable table;
 	private String[][] content;
 	private AuctionClient m_client;
 	private CMClientStub m_clientStub;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					AuctionGui window = new AuctionGui();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the application.
-	 */
 	public AuctionGui(CMClientStub clientStub, AuctionClient client) {
 		m_client = client;
 		m_clientStub = clientStub;
-//		content = new String[][] {};
 		initialize();
 	}
 	public void setContent(String[][] in, int r) {
@@ -111,9 +94,10 @@ public class AuctionGui extends JFrame {
 		JButton btnNewButton = new JButton("·Î±×¾Æ¿ô");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
-				Login lg = m_client.getLogin();
-				lg.setVisible(true);
+				m_client.m_clientStub.logoutCM();
+				frame.dispose();
+				Auction ac = m_client.getAuction();
+				ac.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(12, 524, 110, 29);
@@ -124,6 +108,7 @@ public class AuctionGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				EnrollItem enrollitem = m_client.getEnrollItem();
 				enrollitem.frame.setVisible(true);
+				frame.dispose();
 			}
 		});
 		btnNewButton_1.setBounds(464, 524, 110, 29);
@@ -141,20 +126,20 @@ public class AuctionGui extends JFrame {
 class ButtonRenderer extends JButton implements  TableCellRenderer
 {
 
-//CONSTRUCTOR
-public ButtonRenderer() {
-  //SET BUTTON PROPERTIES
-  setOpaque(true);
-}
-@Override
-public Component getTableCellRendererComponent(JTable table, Object obj,
-    boolean selected, boolean focused, int row, int col) {
+	//CONSTRUCTOR
+	public ButtonRenderer() {
+		//SET BUTTON PROPERTIES
+		setOpaque(true);
+	}
+	@Override
+	public Component getTableCellRendererComponent(JTable table, Object obj,
+												   boolean selected, boolean focused, int row, int col) {
 
-  //SET PASSED OBJECT AS BUTTON TEXT
-    setText((obj==null) ? "":obj.toString());
+		//SET PASSED OBJECT AS BUTTON TEXT
+		setText((obj==null) ? "":obj.toString());
 
-  return this;
-}
+		return this;
+	}
 
 }
 
@@ -189,37 +174,67 @@ class ButtonEditor extends DefaultCellEditor
 	//OVERRIDE A COUPLE OF METHODS
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object obj,
-    boolean selected, int row, int col) {
+												 boolean selected, int row, int col) {
 
-    //SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
-	lbl=(obj==null) ? "":obj.toString();
-	btn.setText(lbl);
-	fieldcol = col;
-	clicked=true;
-	return btn;
+		//SET TEXT TO BUTTON,SET CLICKED TO TRUE,THEN RETURN THE BTN OBJECT
+		lbl=(obj==null) ? "":obj.toString();
+		btn.setText(lbl);
+		fieldcol = col;
+		clicked=true;
+		return btn;
 	}
 
-//IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
+	//IF BUTTON CELL VALUE CHNAGES,IF CLICKED THAT IS
 	@Override
 	public Object getCellEditorValue() {
-	 
+
 		if(clicked&&fieldcol==3)
 		{
-			SetPrice setprice = m_client.getSetPrice();
-			setprice.frame.setVisible(true);
+			m_client.getAuctionGui().frame.dispose();
+			int selected_row = m_client.getAuctionGui().table.getSelectedRow();
+			CMInteractionInfo interInfo = m_clientStub.getCMInfo().getInteractionInfo();
+			CMUser myself = interInfo.getMyself();
+			CMDummyEvent due2 = new CMDummyEvent();
+
+			String tmp2 = "itemInfo#" + selected_row;
+
+			due2.setDummyInfo(tmp2);
+
+			due2.setHandlerSession(myself.getCurrentSession());
+			due2.setHandlerGroup(myself.getCurrentGroup());
+			m_clientStub.send(due2, "SERVER");
+
 		}else if(clicked&&fieldcol==0){
-			
-			ItemDescription itemDes = m_client.getItemDescription();
-			itemDes.frame.setVisible(true);
+
+			int selected_row = m_client.getAuctionGui().table.getSelectedRow();
+
+			CMInteractionInfo interInfo = m_clientStub.getCMInfo().getInteractionInfo();
+			CMUser myself = interInfo.getMyself();
+
+			CMDummyEvent due = new CMDummyEvent();
+
+			String tmp = "ItemDescription#" + selected_row;
+
+			due.setDummyInfo(tmp);
+
+			due.setHandlerSession(myself.getCurrentSession());
+			due.setHandlerGroup(myself.getCurrentGroup());
+
+			m_clientStub.send(due, "SERVER");
+
+//         ItemDescription itemDes = m_client.getItemDescription();
+//         itemDes.frame.setVisible(true);
+
 		}
 		//SET IT TO FALSE NOW THAT ITS CLICKED
 		clicked=false;
 		return new String(lbl);
+
 	}
 
 	@Override
 	public boolean stopCellEditing() {
-       //SET CLICKED TO FALSE FIRST
+		//SET CLICKED TO FALSE FIRST
 		clicked=false;
 		return super.stopCellEditing();
 	}

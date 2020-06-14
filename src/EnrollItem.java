@@ -1,23 +1,12 @@
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-
-
 import kr.ac.konkuk.ccslab.cm.entity.CMUser;
 import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
 import kr.ac.konkuk.ccslab.cm.info.CMInteractionInfo;
-import kr.ac.konkuk.ccslab.cm.manager.CMDBManager;
 import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import java.awt.Font;
-import java.awt.Frame;
-
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
@@ -44,18 +33,7 @@ public class EnrollItem {
 	/**
 	 * Launch the application.
 	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					EnrollItem window = new EnrollItem();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+
 	
 	public EnrollItem(CMClientStub clientStub, AuctionClient client)
 	{
@@ -207,6 +185,7 @@ public class EnrollItem {
 		JButton Cancel = new JButton("√Îº“");
 		Cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				frame.dispose();
 				
 			}
@@ -254,19 +233,6 @@ public class EnrollItem {
 		}
 		
 		return true;
-//		if(in.get("name").length() == 0) {
-//			return false;
-//		} else if(in.get("price").length() == 0){
-//			return false;
-//		} else if(in.get("year").length() == 0){
-//			return false;
-//		} else if(in.get("day").length() == 0){
-//			return false;
-//		} else if(in.get("hour").length() == 0){
-//			return false;
-//		} else if(in.get("description").length() == 0){
-//			return false;
-//		}
 		
 	}
 }
