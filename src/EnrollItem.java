@@ -185,7 +185,8 @@ public class EnrollItem {
 		JButton Cancel = new JButton("√Îº“");
 		Cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				m_client.getAuctionGui().initialize();
+				m_client.getAuctionGui().frame.setVisible(true);
 				frame.dispose();
 				
 			}

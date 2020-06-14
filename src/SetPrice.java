@@ -116,6 +116,8 @@ public class SetPrice {
 		JButton CancelButton = new JButton("√Îº“");
 		CancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				m_client.getAuctionGui().initialize();
+				m_client.getAuctionGui().frame.setVisible(true);
 				frame.dispose();
 			}
 		});
