@@ -58,10 +58,10 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 //		case CMInfo.CM_INTEREST_EVENT:
 //			processInterestEvent(cme);
 //			break;
-//		case CMInfo.CM_DUMMY_EVENT:
-//			System.out.println("CM_DUMMY_EVENT");
-//			processDummyEvent(cme);
-//			break;
+		case CMInfo.CM_DUMMY_EVENT:
+			System.out.println("CM_DUMMY_EVENT");
+			processDummyEvent(cme);
+			break;
 //		case CMInfo.CM_USER_EVENT:
 //			processUserEvent(cme);
 //			break;
@@ -86,16 +86,21 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 	{
 		CMConfigurationInfo confInfo = m_serverStub.getCMInfo().getConfigurationInfo();
 		CMSessionEvent se = (CMSessionEvent) cme;
+		System.out.println("processSessionEvent~~~~~~~~~");
+		System.out.println(se.getID());
 		switch(se.getID())
 		{
 		case CMSessionEvent.LOGIN:
+			System.out.println("CMSessionEvent.LOGIN");
 			System.out.println("["+se.getUserName()+"] requests login.");
 			if(confInfo.isLoginScheme())
 			{
+				System.out.println("confInfo.isLoginScheme()");
 				// user authentication...
 				// CM DB must be used in the following authentication..
 				boolean ret = CMDBManager.authenticateUser(se.getUserName(), se.getPassword(), 
 						m_serverStub.getCMInfo());
+				System.out.println("ret								" + ret);
 				if(!ret)
 				{
 					System.out.println("["+se.getUserName()+"] authentication fails!");

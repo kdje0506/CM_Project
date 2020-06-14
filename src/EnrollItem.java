@@ -188,11 +188,11 @@ public class EnrollItem {
 							inputData.get("hour"));
 					
 					CMDummyEvent due = new CMDummyEvent(); 
-					due.setHandlerSession(myself.getCurrentSession()); 
-					due.setHandlerGroup(myself.getCurrentGroup()); 
+					due.setHandlerSession(m_clientStub.getMyself().getCurrentSession());
+					due.setHandlerGroup(m_clientStub.getMyself().getCurrentGroup());
 					due.setDummyInfo(String.format("EnrollItem#'%s'#%s#'%s'#'%s'#%s#'f'#'%s'", 
 							inputData.get("name"),inputData.get("price"),date,
-							inputData.get("description"),"0",inputData.get("name")));
+							inputData.get("description"),inputData.get("price"),inputData.get("name")));
 					m_clientStub.send(due, "SERVER");}
 				else {
 					m_client.getEnrollResult().setMsg("적절하지 않은 형식입니다.");
