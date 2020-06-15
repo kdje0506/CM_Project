@@ -191,8 +191,8 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 		ID.setHandlerGroup(myself.getCurrentGroup());
 		//String tmp3="setPriceInfo#";
 		int nowPrice = -1;
-
-		String query = String.format("UPDATE item SET now_price = %d WHERE no= %d",Integer.parseInt(data[2]),(Integer.parseInt(data[1])+1));
+			System.out.println(data[3]);
+		String query = String.format("UPDATE item SET now_price = %d, bid_winner = %s WHERE no= %d",Integer.parseInt(data[2]),data[3],(Integer.parseInt(data[1])+1));
 
 		try{
 			ResultSet rs = CMDBManager.sendSelectQuery("SELECT now_price FROM item WHERE no="+(Integer.parseInt(data[1])+1), m_serverStub.getCMInfo());

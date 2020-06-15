@@ -7,6 +7,8 @@ import javax.swing.JTextField;
 
 import kr.ac.konkuk.ccslab.cm.entity.CMUser;
 import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
+import kr.ac.konkuk.ccslab.cm.event.CMSessionEvent;
+import kr.ac.konkuk.ccslab.cm.info.CMConfigurationInfo;
 import kr.ac.konkuk.ccslab.cm.info.CMInteractionInfo;
 import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
 
@@ -100,8 +102,8 @@ public class SetPrice {
 				CMUser myself = interInfo.getMyself();
 				CMDummyEvent due3 = new CMDummyEvent();
 
-				String tmp3 = "setPriceInfo#" + selected_row +"#"+Integer.parseInt(SetPriceField.getText());
 
+				String tmp3 = "setPriceInfo#" + selected_row +"#"+Integer.parseInt(SetPriceField.getText()) + "#" + m_client.m_clientStub.getMyself().getName();
 				due3.setDummyInfo(tmp3);
 
 				due3.setHandlerSession(myself.getCurrentSession());
