@@ -57,14 +57,22 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 						m_serverStub.getCMInfo());
 				if(!ret)
 				{
-					m_serverStub.replyEvent(se, 0);
+					CMInteractionInfo interInfo = m_serverStub.getCMInfo().getInteractionInfo();
+					CMUser myself = interInfo.getMyself();
+					CMDummyEvent dummy = new CMDummyEvent();
+					dummy.setHandlerSession(myself.getCurrentSession());
+					dummy.setHandlerGroup(myself.getCurrentGroup());
+					
+					dummy.setDummyInfo("LoginFailed#");
+					m_serverStub.send(dummy, se.getSender());
+// 					m_serverStub.replyEvent(se, 0);
 				}
 				else
 				{
 					CMInteractionInfo interInfo = m_serverStub.getCMInfo().getInteractionInfo();
 					CMUser myself = interInfo.getMyself();
 					System.out.println("["+se.getUserName()+"] authentication succeeded.");
-					m_serverStub.replyEvent(se, 1);
+// 					m_serverStub.replyEvent(se, 1);
 
 					sendItemList(se.getSender());
 //					CMDummyEvent due = new CMDummyEvent();
@@ -77,7 +85,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 //					    	tmp += rs.getString(1)+"#";
 //					    	tmp += rs.getString(2)+"#";
 //					    	tmp += rs.getString(3)+"#";
-//					    	tmp += "ÀÔÂû"+"#";
+//					    	tmp += "ìž…ì°°"+"#";
 //					    }
 //				    }catch(SQLException e) {
 //				    }
@@ -128,7 +136,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 			return;
 		}
 	}
-	// Å¬¶óÀÌ¾ðÆ®¿¡°Ô °æ¸Å ¸ñ·Ï ¸®½ºÆ® º¸³»ÁÖ±â
+	// í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ê²½ë§¤ ëª©ë¡ ë¦¬ìŠ¤íŠ¸ ë³´ë‚´ì£¼ê¸°
 	private void sendItemList(String clientName){
 		CMDummyEvent due = new CMDummyEvent();
 		due.setHandlerSession(m_serverStub.getMyself().getCurrentSession());
@@ -140,7 +148,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 				tmp += rs.getString(1)+"#";
 				tmp += rs.getString(2)+"#";
 				tmp += rs.getString(3)+"#";
-				tmp += "ÀÔÂû"+"#";
+				tmp += "ìž…ì°°"+"#";
 			}
 		}catch(SQLException e) {
 		}
@@ -202,7 +210,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 		}catch(SQLException e) {}
 
 		if(nowPrice == -1){
-			System.out.println("DB Á¢¼Ó ¿À·ù ¿¹¿ÜÃ³¸®");
+			System.out.println("DB ì ‘ì† ì˜¤ë¥˜ ì˜ˆì™¸ì²˜ë¦¬");
 		}
 		else if(Integer.parseInt(data[2])>nowPrice){
 			System.out.println("success!!!");
@@ -210,7 +218,7 @@ public class AuctionServerEventHandler implements CMAppEventHandler {
 			sendItemList(due.getSender());
 		}
 			else{
-				System.out.println("ÇöÀç °¡°Ýº¸´Ù ÀÛ½À´Ï´Ù.");
+				System.out.println("í˜„ìž¬ ê°€ê²©ë³´ë‹¤ ìž‘ìŠµë‹ˆë‹¤.");
 			}
 		}
 		else if(data[0].equals("itemInfo")){
