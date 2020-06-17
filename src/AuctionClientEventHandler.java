@@ -42,24 +42,14 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 			if(se.isValidUser() == 0)
 			{
 				System.err.println("This client fails authentication by the default server!");
-				String errorMessage = "Check your id or password";
-				JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-				Login lg = m_client.getLogin();
-				lg.setVisible(true);
 			}
 			else if(se.isValidUser() == -1)
 			{
 				System.err.println("This client is already in the login-user list!");
-				String errorMessage = "This user already logged-in";
-				JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-				Login lg = m_client.getLogin();
-				lg.setVisible(true);
 			}
 			else
 			{
 				System.out.println("This client successfully logs in to the default server.");
-				AuctionGui ag = m_client.getAuctionGui();
-				ag.frame.setVisible(true);
 			}
 			break;
 		case CMSessionEvent.RESPONSE_SESSION_INFO:
