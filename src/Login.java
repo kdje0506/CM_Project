@@ -103,11 +103,6 @@ public class Login extends JFrame {
 					if(bRequestResult)
 					{
 						System.out.println("successfully sent the login request.\n");
-						id.setText("");
-						pwd.setText("");
-						m_client.getLogin().dispose();
-						m_client.getAuction().dispose();
-
 					}
 					else
 					{
