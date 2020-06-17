@@ -38,20 +38,20 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 		CMSessionEvent se = (CMSessionEvent)cme;
 		switch(se.getID())
 		{
-		case CMSessionEvent.LOGIN_ACK:
-			if(se.isValidUser() == 0)
-			{
-				System.err.println("This client fails authentication by the default server!");
-			}
-			else if(se.isValidUser() == -1)
-			{
-				System.err.println("This client is already in the login-user list!");
-			}
-			else
-			{
-				System.out.println("This client successfully logs in to the default server.");
-			}
-			break;
+// 		case CMSessionEvent.LOGIN_ACK:
+// 			if(se.isValidUser() == 0)
+// 			{
+// 				System.err.println("This client fails authentication by the default server!");
+// 			}
+// 			else if(se.isValidUser() == -1)
+// 			{
+// 				System.err.println("This client is already in the login-user list!");
+// 			}
+// 			else
+// 			{
+// 				System.out.println("This client successfully logs in to the default server.");
+// 			}
+// 			break;
 		case CMSessionEvent.RESPONSE_SESSION_INFO:
 			break;
 		case CMSessionEvent.SESSION_TALK:
@@ -181,6 +181,12 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 			m_client.getSetPrice().NowPriceField.setText(tmp[2]);
 			m_client.getSetPrice().frame.setVisible(true);
 		}
+		else if(tmp[0].equals("LoginFailed")) {
+			String errorMessage = "Check your id or password";
+			JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+			Login lg = m_client.getLogin();
+			lg.setVisible(true);
+		}
 		else {
 
 			int rowLength = tmp.length / 4;
@@ -193,6 +199,7 @@ public class AuctionClientEventHandler implements CMAppEventHandler {
 				}
 			}
 
+			m_client.getLogin().dispose();
 			m_client.getAuctionGui().setContent(input, rowLength);
 			m_client.getAuctionGui().initialize();
 			m_client.getAuctionGui().frame.setVisible(true);
